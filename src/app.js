@@ -21,6 +21,4 @@ app.get('/', (req, res) => {
 
 app.use('/', indexRouter);
 
-
-
 export default app;

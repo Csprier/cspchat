@@ -6,19 +6,31 @@
 import app from '../app';
 import debugLib from 'debug';
 import http from 'http';
-const debug = debugLib('your-project-name:server');
+const debug = debugLib('cspChat:server');
 
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '8080');
 app.set('port', port);
 
 // Create HTTP server.
-const server = http.createServer(app);
+const server = http.createServer(app).listen(port, () => {
+  console.log(`listening on *:${port}`);
+});
+const io = require('socket.io').listen(server);
 
 // Listen on provided port, on all network interfaces.
-server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+// io listen on the connection event for incoming sockets
+io.on('connection', (socket) => {
+  // connect
+  console.log('a user connected');
+  // disconnect
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {
@@ -61,10 +73,7 @@ function onError(error) {
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
+// Event listener for HTTP server "listening" event.
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string'
