@@ -22,6 +22,7 @@ const io = require('socket.io').listen(server);
 server.on('error', onError);
 server.on('listening', onListening);
 
+/** SOCKETS */
 // io listen on the connection event for incoming sockets
 io.on('connection', (socket) => {
   // connect
@@ -29,6 +30,12 @@ io.on('connection', (socket) => {
   // disconnect
   socket.on('disconnect', function(){
     console.log('user disconnected');
+  });
+});
+
+io.on('connection', function(socket){
+  socket.on('chat message', (msg) => {
+    console.log('message: ' + msg);
   });
 });
 

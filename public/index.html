@@ -2,12 +2,13 @@
 <html>
   <head>
     <title>csp chat</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
 
   <body>
     <h1>csp chat</h1>
-    <ul id="messages" class="messages"></ul>
+    <ul id="messages"></ul>
     <form action="" id="form">
       <input id="m" autocomplete="off" />
       <button>Send</button>
@@ -16,6 +17,7 @@
   <!-- Load & Expose the io global variable and connects-->
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <!-- <script src=""></script> -->
   <script>
     $(function () {
       var socket = io();
@@ -25,7 +27,10 @@
         $('#m').val('');
         return false;
       });
+      socket.on('chat message', (msg) => {
+        $('messages').append($('<li>').text(msg));
+      });
     });
   </script>
-  <!---->
+  <!--  -->
 </html>
