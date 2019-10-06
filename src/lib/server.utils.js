@@ -1,3 +1,6 @@
+import debugLib from 'debug';
+const debug = debugLib('cspChat:server');
+
 export const serverUtils = {
   // ====================================================================================================
   normalizePort: (val) => { // Normalize a port into a number, string, or false.
@@ -37,13 +40,5 @@ export const serverUtils = {
       default:
         throw error;
     }
-  },
-  // ====================================================================================================
-  onListening: () => { // Event listener for HTTP server "listening" event.
-    const addr = server.address();
-    const bind = typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + addr.port;
-    debug('Listening on ' + bind);
   }
 }

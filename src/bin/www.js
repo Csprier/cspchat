@@ -21,7 +21,7 @@ const io = require('socket.io').listen(server);
 
 // Listen on provided port, on all network interfaces.
 server.on('error', (err) => serverUtils.onError(err));
-server.on('listening', serverUtils.onListening());
+// server.on('listening', onListening());
 
 /** SOCKETS */
 // io listen on the connection event for incoming sockets
@@ -39,3 +39,12 @@ io.on('connection', (socket) => {
     console.log('message: ' + msg);
   });
 });
+
+// ====================================================================================================
+// function onListening() { // Event listener for HTTP server "listening" event.
+//   const addr = server.address();
+//   const bind = typeof addr === 'string'
+//     ? 'pipe ' + addr
+//     : 'port ' + addr.port;
+//   debug('Listening on ' + bind);
+// }

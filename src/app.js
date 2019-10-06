@@ -14,9 +14,9 @@ const app = express();
 
 // ===============================================================================================
 // CORS
-app.use(
-  cors({ origin: CLIENT_ORIGIN })
-);
+// app.use(
+//   cors({ origin: CLIENT_ORIGIN })
+// );
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -40,13 +40,14 @@ app.use((req, res, next) => {
   err.status = 404;
   next(err);
 });
-
+// |
+// V
 app.use((err, req, res, next) => {
   console.error(`ERROR: ${err}`);
   res.status(err.status);
   res.json({
     message: err.message,
-    error: app.get('env') === 'development' ? err : err
+    error: (app.get('env') === 'development') ? err : err
   });
 });
 
