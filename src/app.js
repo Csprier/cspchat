@@ -51,10 +51,22 @@ app.use((err, req, res, next) => {
   });
 });
 
+// ./public/index.html
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 });
 
+// Static
 app.use('/', indexRouter);
+
+// Database
+import db from './routes/queries.routes';
+app.get('/users', db.getUsers);
+app.get('/users/:id', db.getUserById);
+app.post('/users', db.createUser);
+app.put('/users/:id', db.editUser);
+app.delete('/users/:id', db.deleteUser);
+
+
 
 export default app;
