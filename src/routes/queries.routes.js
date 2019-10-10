@@ -62,3 +62,19 @@ const editUser = (req, res) => {
   );
 };
 
+// DELETE
+const deleteUser = (req, res) => {
+  const id = parseInt(req.params.id);
+  pool.query(`
+    DELETE FROM users
+    WHERE ID = $1
+  `,
+    [ id ],
+    (err, result) => {
+      if (err) {
+        throw new Error(`There was an error deleting the user: ${err}`);
+      }
+      res.status(200).send(`User delete with ID: ${id}`);
+    }
+  );
+};
