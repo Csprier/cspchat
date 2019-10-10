@@ -26,7 +26,6 @@ const getUserById = (req, res) => {
 // POST
 const createUser = (req, res) => {
   const { username, email } = req.body;
-
   pool.query(`
       INSERT INTO users 
       (username, email), 
@@ -43,4 +42,23 @@ const createUser = (req, res) => {
   );
 };
 
-export default router;
+// PUT
+const editUser = (req, res) => {
+  const id = parseInt(req.params.id);
+  const { username, email } = req.body;
+  pool.query(`
+    UPDATE users 
+    SET 
+    username = $1, email = $2
+    WHERE id = $3 
+  `, 
+    [ id, username, email ],
+    (err, result) => {
+      if (err) {
+        throw new Error(`There was an error editing user information: ${err}`);
+      }
+      res.status(200).json(result.rows);
+    }
+  );
+};
+
