@@ -57,13 +57,4 @@ app.get('/', (req, res) => {
 
 app.use('/', indexRouter);
 
-const Pool = require('pg').Pool;
-const pool = new Pool({
-  user: 'wizard',
-  host: 'localhost',
-  database: 'chat',
-  password: 'password',
-  port: 5432,
-});
-
 export default app;

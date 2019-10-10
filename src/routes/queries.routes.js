@@ -2,6 +2,16 @@
 import express from 'express';
 const router = express.Router();
 
+// Create query Pool
+const Pool = require('pg').Pool;
+const pool = new Pool({
+  user: 'wizard',
+  host: 'localhost',
+  database: 'chat',
+  password: 'password',
+  port: 5432,
+});
+
 // GET
 const getUsers = (req, res) => {
   pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
