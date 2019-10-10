@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     console.log('Message: ' + msg);
   })
-})
+});
 
 // ====================================================================================================
 // function onListening() { // Event listener for HTTP server "listening" event.

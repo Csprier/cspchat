@@ -14,9 +14,6 @@ const app = express();
 
 // ===============================================================================================
 // CORS
-// app.use(
-//   cors({ origin: CLIENT_ORIGIN })
-// );
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -36,12 +33,11 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // ERROR HANDLING
 app.use((req, res, next) => {
-  const err = new Error('Not Founds, something broke!');
+  const err = new Error('Not Found, something broke!');
   err.status = 404;
   next(err);
 });
-// |
-// V
+
 app.use((err, req, res, next) => {
   console.error(`ERROR: ${err}`);
   res.status(err.status);
@@ -60,13 +56,11 @@ app.get('/', (req, res) => {
 app.use('/', indexRouter);
 
 // Database
-import db from './routes/queries.routes';
-app.get('/users', db.getUsers);
-app.get('/users/:id', db.getUserById);
-app.post('/users', db.createUser);
-app.put('/users/:id', db.editUser);
-app.delete('/users/:id', db.deleteUser);
-
-
+const queries = require('./routes/queries.routes');
+app.get('/users', queries.getUsers);
+app.get('/users/:id', queries.getUserById);
+app.post('/users', queries.createUser);
+app.put('/users/:id', queries.editUser);
+app.delete('/users/:id', queries.deleteUser);
 
 export default app;
