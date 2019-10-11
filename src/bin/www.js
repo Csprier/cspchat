@@ -14,9 +14,10 @@ const port = serverUtils.normalizePort(process.env.PORT || '8080');
 app.set('port', port);
 
 // Create HTTP server.
-const server = http.createServer(app).listen(port, () => {
-  console.log(`listening on *:${port}`);
-});
+const server = http.createServer(app)
+        .listen(port, () => {
+          console.log(`listening on *:${port}`);
+        });
 const io = require('socket.io').listen(server);
 
 // Listen on provided port, on all network interfaces.
@@ -40,11 +41,31 @@ io.on('connection', (socket) => {
   })
 });
 
-// ====================================================================================================
-// function onListening() { // Event listener for HTTP server "listening" event.
-//   const addr = server.address();
-//   const bind = typeof addr === 'string'
-//     ? 'pipe ' + addr
-//     : 'port ' + addr.port;
-//   debug('Listening on ' + bind);
-// }
+// // Database
+// // const queries = require('../routes/queries.routes');
+// import { getUsers, getUserById, createUser, editUser, deleteUser } from '../routes/queries.routes';
+// const db = { getUsers, getUserById, createUser, editUser, deleteUser };
+// app.use('/users', db.getUsers);
+// app.use('/users/:id', db.getUserById);
+// app.use('/users', db.createUser);
+// app.use('/users/:id', db.editUser);
+// app.use('/users/:id', db.deleteUser);
+
+// function dbConnect(req, res, next) {
+//   pool.connect(PSQL_URI, (err, Client, done) => {
+//     if (err) { 
+//       console.log("Not able to get connection " + err);
+//       res.status(400).send(err);
+//     } 
+//     Client.query('SELECT * FROM users', (err, result) => {
+//       done(); // closing the connection;
+//       if (err) {
+//         console.log(err);
+//         res.status(400).send(err);
+//       }
+//       res.status(200).send(result.rows);
+//       console.log(result.rows);
+//     });
+//   });
+// };
+
