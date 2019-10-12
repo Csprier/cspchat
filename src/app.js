@@ -8,7 +8,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import indexRouter from './routes/index';
-import { PORT, PSQL_URI } from './config';
+// import { PORT, PSQL_URI } from './config';
 
 // Instance
 const app = express();
@@ -57,6 +57,16 @@ app.get('/', (req, res) => {
 
 // Static
 app.use('/', indexRouter);
+// const queries = require('../routes/queries.routes');
+// import queries from '../routes/queries.routes';
+// console.log('QUERY OBJECTED IMPORTED:', queries);
+// const db = { getUsers, getUserById, createUser, editUser, deleteUser };
+// app.get('/users', queries.getUsers);
+// app.get('/users/:id', queries.getUserById);
+// app.post('/users', queries.createUser);
+// app.put('/users/:id', queries.editUser);
+// app.delete('/users/:id', queries.deleteUser);
+
 
 // ======================================================
 // POSTGRESQL DATABASE CONNECTION
