@@ -7,6 +7,8 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+// -- Import user router
+import userRouter from '../src/routes/queries.routes';
 import indexRouter from './routes/index';
 // import { PORT, PSQL_URI } from './config';
 
@@ -55,22 +57,15 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 });
 
+// - Mount router -
 // Static
 app.use('/', indexRouter);
-// const queries = require('../routes/queries.routes');
-// import queries from '../routes/queries.routes';
-// console.log('QUERY OBJECTED IMPORTED:', queries);
-// const db = { getUsers, getUserById, createUser, editUser, deleteUser };
-// app.get('/users', queries.getUsers);
-// app.get('/users/:id', queries.getUserById);
-// app.post('/users', queries.createUser);
-// app.put('/users/:id', queries.editUser);
-// app.delete('/users/:id', queries.deleteUser);
-
+// API
+app.use('/users', userRouter);
+// ----
 
 // ======================================================
 // POSTGRESQL DATABASE CONNECTION
-// const pg = require('pg');
 import pg from 'pg';
 const connectionString = 'postgres://wizard:password@localhost:5432/chat';
 const client = new pg.Client(connectionString);
@@ -78,10 +73,12 @@ client.connect((err) => {
   if (err) {
     return console.error('could not connect to postgres', err);
   }
+  console.log('-- Connecting to database --');
   client.query('SELECT * FROM users', (err, result) => {
     if (err) {
       return console.error('error running query', err);
     }
+    console.log('-- Connection test query results --');
     console.log(result.rows);
     client.end();
   });
@@ -96,21 +93,5 @@ client.connect((err) => {
 //   password: 'password',
 //   port: 5432,
 // });
-const { Client } = require('pg');
-const connectionString = PSQL_URI || 'postgres://wizard:password@localhost:5432/chat';
-const client = new Client({
-  connectionString: connectionString
-});
-client.connect();
-
-// Database
-// const queries = require('../routes/queries.routes');
-import queries from '../routes/queries.routes';
-// const db = { getUsers, getUserById, createUser, editUser, deleteUser };
-app.get('/users', queries.getUsers);
-app.get('/users/:id', queries.getUserById);
-app.post('/users', queries.createUser);
-app.put('/users/:id', queries.editUser);
-app.delete('/users/:id', queries.deleteUser);
 */
 export default app;

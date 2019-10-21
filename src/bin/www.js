@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   // disconnect
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('a user disconnected');
   });
 });
 
@@ -40,32 +40,3 @@ io.on('connection', (socket) => {
     console.log('Message: ' + msg);
   })
 });
-
-// // Database
-// // const queries = require('../routes/queries.routes');
-// import { getUsers, getUserById, createUser, editUser, deleteUser } from '../routes/queries.routes';
-// const db = { getUsers, getUserById, createUser, editUser, deleteUser };
-// app.use('/users', db.getUsers);
-// app.use('/users/:id', db.getUserById);
-// app.use('/users', db.createUser);
-// app.use('/users/:id', db.editUser);
-// app.use('/users/:id', db.deleteUser);
-
-// function dbConnect(req, res, next) {
-//   pool.connect(PSQL_URI, (err, Client, done) => {
-//     if (err) { 
-//       console.log("Not able to get connection " + err);
-//       res.status(400).send(err);
-//     } 
-//     Client.query('SELECT * FROM users', (err, result) => {
-//       done(); // closing the connection;
-//       if (err) {
-//         console.log(err);
-//         res.status(400).send(err);
-//       }
-//       res.status(200).send(result.rows);
-//       console.log(result.rows);
-//     });
-//   });
-// };
-

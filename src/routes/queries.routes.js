@@ -1,3 +1,18 @@
+const express = require('express');
+const router = express.Router();
+
+router.get('/users', (req, res) => {
+  pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
+    if (err) {
+      throw new Error(`There was an error getting users: ${err}`);
+    }
+    res.status(200).json(result.rows);
+  });
+});
+
+module.exports = router;
+
+/*
 const queries = {
   getUsers: (req, res) => {
     pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
@@ -68,7 +83,9 @@ const queries = {
   }  
 } // Enc module.exports = {};
 
-export default queries;
+export default { queries };
+*/
+
 
 /*
 // This is a closure
