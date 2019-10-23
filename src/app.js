@@ -7,8 +7,10 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-// -- Import user router
-import userRouter from '../src/routes/queries.routes';
+
+// -- Import routers
+import userRouter from './routes/queries.routes';
+// const userRouter = require('../src/routes/queries.routes');
 import indexRouter from './routes/index';
 // import { PORT, PSQL_URI } from './config';
 
@@ -26,72 +28,77 @@ app.use((req, res, next) => {
 });
 app.options('*', cors());
 
+// Add middlewares: logger, parser, etc
 app.use(logger('dev'));
-app.use(express.json());
+app.use(express.json()); // Body Parser
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Static
 app.use(express.static(path.join(__dirname, '../public')));
 
+// - Mount router -
+// Static
+app.use('/', indexRouter);
+app.get('/favicon.ico', (req, res) => res.status(204));
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html')
+});
+// ----
+
+// Database Users API ExpressJS Router
+app.use('/users', userRouter);
+// ----
+
 // ======================================================
 // ERROR HANDLING
+// catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new Error('Not Found, something broke!');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 app.use((err, req, res, next) => {
-  console.error(`ERROR: ${err}`);
-  res.status(err.status);
+  res.status(err.status || 500);
   res.json({
     message: err.message,
-    error: (app.get('env') === 'development') ? err : err
+    error: err
   });
 });
 // ======================================================
-
-// ./public/index.html
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
-});
-
-// - Mount router -
-// Static
-app.use('/', indexRouter);
-// API
-app.use('/users', userRouter);
-// ----
 
 // ======================================================
 // POSTGRESQL DATABASE CONNECTION
 import pg from 'pg';
 const connectionString = 'postgres://wizard:password@localhost:5432/chat';
 const client = new pg.Client(connectionString);
+import db from './db/index';
 client.connect((err) => {
   if (err) {
     return console.error('could not connect to postgres', err);
   }
-  console.log('-- Connecting to database --');
-  client.query('SELECT * FROM users', (err, result) => {
+  console.log('-- Connecting to database from entry point --');
+  console.log('');
+  db.query('SELECT * FROM users', (err, result) => {
     if (err) {
       return console.error('error running query', err);
     }
     console.log('-- Connection test query results --');
     console.log(result.rows);
-    client.end();
+    // client.end();
+    console.log('-- End Test Query --');
   });
 });
 
-/*
-// const { Pool } = require('pg').Pool;
-// const pool = new Pool({
-//   user: 'wizard',
-//   host: 'localhost',
-//   database: 'chat',
-//   password: 'password',
-//   port: 5432,
-// });
-*/
 export default app;
+
+/**
+const pool = new Pool({
+  user: 'wizard',
+  host: 'localhost',
+  database: 'chat',
+  password: 'password',
+  port: 5432,
+});
+*/

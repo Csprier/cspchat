@@ -1,261 +1,31 @@
+// Database
+import db from '../db/index';
+// Express & Router
 const express = require('express');
 const router = express.Router();
 
-router.get('/users', (req, res) => {
-  pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
+router.get('/', (req, res, next) => {
+  const getAllUsersQuery = 'SELECT * FROM users';
+  db.query(getAllUsersQuery, (err, res) => {
     if (err) {
-      throw new Error(`There was an error getting users: ${err}`);
+      return next(err);
     }
-    res.status(200).json(result.rows);
+    console.log(res.rows);
+    // res.json(res.rows);
   });
 });
 
+router.get('/:id', (req, res, next) => {
+  const getUserByIDQuery = 'SELECT * FROM users WHERE id = $1';
+  const id = parseInt(req.params.id);
+  console.log('GET /:id', id);
+  db.query(getUserByIDQuery, [id], (err, res) => {
+    if (err) {
+      return next(err);
+    }
+    console.log(res.rows[0]);
+    // res.status(200).json(result.rows);
+  });
+})
+
 module.exports = router;
-
-/*
-const queries = {
-  getUsers: (req, res) => {
-    pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
-      if (err) {
-        throw new Error(`There was an error getting users: ${err}`);
-      }
-      res.status(200).json(result.rows);
-    });
-  },
-  getUserById: (req, res) => {
-    const id = parseInt(req.params.id);
-    pool.query('SELECT * FROM users WHERE id = $1', [id], (err, result) => {
-      if (err) {
-        throw new Error(`There was an error getting user by ID:, ${err}`);
-      }
-      res.status(200).json(result.rows);
-    });
-  },
-  createUser: (req, res) => {
-    const { username, email } = req.body;
-    pool.query(`
-        INSERT INTO users 
-        (username, email), 
-        VALUES
-        $1, $2
-      `, 
-      [ username, email ],
-      (err, result) => {
-        if (err) {
-          throw new Error(`There was an error creating a new user: ${err}`);
-        }
-        res.status(200).json(result.rows);
-      }
-    );
-  },
-  editUser: (req, res) => {
-    const id = parseInt(req.params.id);
-    const { username, email } = req.body;
-    pool.query(`
-      UPDATE users 
-      SET 
-      username = $1, email = $2
-      WHERE id = $3 
-    `, 
-      [ id, username, email ],
-      (err, result) => {
-        if (err) {
-          throw new Error(`There was an error editing user information: ${err}`);
-        }
-        res.status(200).json(result.rows);
-      }
-    );
-  },
-  deleteUser: (req, res) => {
-    const id = parseInt(req.params.id);
-    pool.query(`
-      DELETE FROM users
-      WHERE ID = $1
-    `,
-      [ id ],
-      (err, result) => {
-        if (err) {
-          throw new Error(`There was an error deleting the user: ${err}`);
-        }
-        res.status(200).send(`User delete with ID: ${id}`);
-      }
-    );
-  }  
-} // Enc module.exports = {};
-
-export default { queries };
-*/
-
-
-/*
-// This is a closure
-export default function queries() {
-  // GET
-  function getUsers(req, res) {
-    pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
-      if (err) {
-        throw new Error(`There was an error getting users: ${err}`);
-      }
-      res.status(200).json(result.rows);
-    });
-  };
-
-  // GET/:id
-  function getUserById(req, res) {
-    const id = parseInt(req.params.id);
-    pool.query('SELECT * FROM users WHERE id = $1', [id], (err, result) => {
-      if (err) {
-        throw new Error(`There was an error getting user by ID:, ${err}`);
-      }
-      res.status(200).json(result.rows);
-    });
-  };
-
-  // POST
-  function createUser(req, res) {
-    const { username, email } = req.body;
-    pool.query(`
-        INSERT INTO users 
-        (username, email), 
-        VALUES
-        $1, $2
-      `, 
-      [ username, email ],
-      (err, result) => {
-        if (err) {
-          throw new Error(`There was an error creating a new user: ${err}`);
-        }
-        res.status(200).json(result.rows);
-      }
-    );
-  };
-
-  // PUT
-  function editUser(req, res) {
-    const id = parseInt(req.params.id);
-    const { username, email } = req.body;
-    pool.query(`
-      UPDATE users 
-      SET 
-      username = $1, email = $2
-      WHERE id = $3 
-    `, 
-      [ id, username, email ],
-      (err, result) => {
-        if (err) {
-          throw new Error(`There was an error editing user information: ${err}`);
-        }
-        res.status(200).json(result.rows);
-      }
-    );
-  };
-
-  // DELETE
-  function deleteUser(req, res) {
-    const id = parseInt(req.params.id);
-    pool.query(`
-      DELETE FROM users
-      WHERE ID = $1
-    `,
-      [ id ],
-      (err, result) => {
-        if (err) {
-          throw new Error(`There was an error deleting the user: ${err}`);
-        }
-        res.status(200).send(`User delete with ID: ${id}`);
-      }
-    );
-  };  
-  // return an object, that is the api
-  return { getUsers, getUserById, createUser, editUser, deleteUser };
-};
-*/
-
-
-/*
-// These are functions exported in an object
-// GET
-const getUsers = (req, res) => {
-  pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
-    if (err) {
-      throw new Error(`There was an error getting users: ${err}`);
-    }
-    res.status(200).json(result.rows);
-  });
-};
-
-// GET/:id
-const getUserById = (req, res) => {
-  const id = parseInt(req.params.id);
-  pool.query('SELECT * FROM users WHERE id = $1', [id], (err, result) => {
-    if (err) {
-      throw new Error(`There was an error getting user by ID:, ${err}`);
-    }
-    res.status(200).json(result.rows);
-  });
-};
-
-// POST
-const createUser = (req, res) => {
-  const { username, email } = req.body;
-  pool.query(`
-      INSERT INTO users 
-      (username, email), 
-      VALUES
-      $1, $2
-    `, 
-    [ username, email ],
-    (err, result) => {
-      if (err) {
-        throw new Error(`There was an error creating a new user: ${err}`);
-      }
-      res.status(200).json(result.rows);
-    }
-  );
-};
-
-// PUT
-const editUser = (req, res) => {
-  const id = parseInt(req.params.id);
-  const { username, email } = req.body;
-  pool.query(`
-    UPDATE users 
-    SET 
-    username = $1, email = $2
-    WHERE id = $3 
-  `, 
-    [ id, username, email ],
-    (err, result) => {
-      if (err) {
-        throw new Error(`There was an error editing user information: ${err}`);
-      }
-      res.status(200).json(result.rows);
-    }
-  );
-};
-
-// DELETE
-const deleteUser = (req, res) => {
-  const id = parseInt(req.params.id);
-  pool.query(`
-    DELETE FROM users
-    WHERE ID = $1
-  `,
-    [ id ],
-    (err, result) => {
-      if (err) {
-        throw new Error(`There was an error deleting the user: ${err}`);
-      }
-      res.status(200).send(`User delete with ID: ${id}`);
-    }
-  );
-};
-
-module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
-  editUser,
-  deleteUser
-};
-*/
